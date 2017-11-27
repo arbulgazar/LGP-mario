@@ -125,7 +125,7 @@ class Menu(tools._State):
         """Resets the game info in case of a Game Over and restart"""
         self.game_info[c.COIN_TOTAL] = 0
         self.game_info[c.SCORE] = 0
-        self.game_info[c.LIVES] = 3
+        self.game_info[c.LIVES] = 1
         self.game_info[c.CURRENT_TIME] = 0.0
         self.game_info[c.LEVEL_STATE] = None
 

@@ -573,34 +573,36 @@ class Mario(pg.sprite.Sprite):
         if keys[tools.keybinding['left']]:
             self.get_out_of_crouch()
             self.facing_right = False
-            if self.x_vel > 0:
-                self.frame_index = 5
-                self.x_accel = c.SMALL_TURNAROUND
-            else:
-                self.x_accel = c.WALK_ACCEL
-
-            if self.x_vel > (self.max_x_vel * -1):
-                self.x_vel -= self.x_accel
-                if self.x_vel > -0.5:
-                    self.x_vel = -0.5
-            elif self.x_vel < (self.max_x_vel * -1):
-                self.x_vel += self.x_accel
+            self.x_vel = -4
+            # if self.x_vel > 0:
+            #     self.frame_index = 5
+            #     self.x_accel = c.SMALL_TURNAROUND
+            # else:
+            #     self.x_accel = c.WALK_ACCEL
+            #
+            # if self.x_vel > (self.max_x_vel * -1):
+            #     self.x_vel -= self.x_accel
+            #     if self.x_vel > -0.5:
+            #         self.x_vel = -0.5
+            # elif self.x_vel < (self.max_x_vel * -1):
+            #     self.x_vel += self.x_accel
 
         elif keys[tools.keybinding['right']]:
             self.get_out_of_crouch()
             self.facing_right = True
-            if self.x_vel < 0:
-                self.frame_index = 5
-                self.x_accel = c.SMALL_TURNAROUND
-            else:
-                self.x_accel = c.WALK_ACCEL
-
-            if self.x_vel < self.max_x_vel:
-                self.x_vel += self.x_accel
-                if self.x_vel < 0.5:
-                    self.x_vel = 0.5
-            elif self.x_vel > self.max_x_vel:
-                self.x_vel -= self.x_accel
+            self.x_vel = 4
+            # if self.x_vel < 0:
+            #     self.frame_index = 5
+            #     self.x_accel = c.SMALL_TURNAROUND
+            # else:
+            #     self.x_accel = c.WALK_ACCEL
+            #
+            # if self.x_vel < self.max_x_vel:
+            #     self.x_vel += self.x_accel
+            #     if self.x_vel < 0.5:
+            #         self.x_vel = 0.5
+            # elif self.x_vel > self.max_x_vel:
+            #     self.x_vel -= self.x_accel
 
         else:
             if self.facing_right:
@@ -690,6 +692,7 @@ class Mario(pg.sprite.Sprite):
     def start_death_jump(self, game_info):
         """Used to put Mario in a DEATH_JUMP state"""
         self.dead = True
+        # self.rect.y = c.SCREEN_HEIGHT - 1
         game_info[c.MARIO_DEAD] = True
         self.y_vel = -11
         self.gravity = .5

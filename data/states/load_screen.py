@@ -33,6 +33,8 @@ class LoadScreen(tools._State):
 
     def update(self, surface, keys, current_time):
         """Updates the loading screen"""
+        # Learning
+        self.done = True
         if (current_time - self.start_time) < 2400:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
@@ -67,6 +69,8 @@ class GameOver(LoadScreen):
     def update(self, surface, keys, current_time):
         self.current_time = current_time
         self.sound_manager.update(self.persist, None)
+        # for learning
+        self.done = True
 
         if (self.current_time - self.start_time) < 7000:
             surface.fill(c.BLACK)
@@ -98,7 +102,8 @@ class TimeOut(LoadScreen):
 
     def update(self, surface, keys, current_time):
         self.current_time = current_time
-
+        # For learning
+        self.done = True
         if (self.current_time - self.start_time) < 2400:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
