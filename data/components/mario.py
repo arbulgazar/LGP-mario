@@ -573,7 +573,7 @@ class Mario(pg.sprite.Sprite):
         if keys[tools.keybinding['left']]:
             self.get_out_of_crouch()
             self.facing_right = False
-            self.x_vel = -4
+            self.x_vel = -c.MARIO_X_VELOCITY
             # if self.x_vel > 0:
             #     self.frame_index = 5
             #     self.x_accel = c.SMALL_TURNAROUND
@@ -590,7 +590,7 @@ class Mario(pg.sprite.Sprite):
         elif keys[tools.keybinding['right']]:
             self.get_out_of_crouch()
             self.facing_right = True
-            self.x_vel = 4
+            self.x_vel = c.MARIO_X_VELOCITY
             # if self.x_vel < 0:
             #     self.frame_index = 5
             #     self.x_accel = c.SMALL_TURNAROUND
@@ -605,18 +605,20 @@ class Mario(pg.sprite.Sprite):
             #     self.x_vel -= self.x_accel
 
         else:
-            if self.facing_right:
-                if self.x_vel > 0:
-                    self.x_vel -= self.x_accel
-                else:
-                    self.x_vel = 0
-                    self.state = c.STAND
-            else:
-                if self.x_vel < 0:
-                    self.x_vel += self.x_accel
-                else:
-                    self.x_vel = 0
-                    self.state = c.STAND
+            self.x_vel = 0
+            self.state = c.STAND
+            # if self.facing_right:
+            #     if self.x_vel > 0:
+            #         self.x_vel -= self.x_accel
+            #     else:
+            #         self.x_vel = 0
+            #         self.state = c.STAND
+            # else:
+            #     if self.x_vel < 0:
+            #         self.x_vel += self.x_accel
+            #     else:
+            #         self.x_vel = 0
+            #         self.state = c.STAND
 
 
     def calculate_animation_speed(self):
@@ -645,12 +647,14 @@ class Mario(pg.sprite.Sprite):
             self.state = c.FALL
 
         if keys[tools.keybinding['left']]:
-            if self.x_vel > (self.max_x_vel * - 1):
-                self.x_vel -= self.x_accel
+            self.x_vel = -c.MARIO_X_VELOCITY
+            # if self.x_vel > (self.max_x_vel * - 1):
+            #     self.x_vel -= self.x_accel
 
         elif keys[tools.keybinding['right']]:
-            if self.x_vel < self.max_x_vel:
-                self.x_vel += self.x_accel
+            self.x_vel = c.MARIO_X_VELOCITY
+            # if self.x_vel < self.max_x_vel:
+            #     self.x_vel += self.x_accel
 
         if not keys[tools.keybinding['jump']]:
             self.gravity = c.GRAVITY

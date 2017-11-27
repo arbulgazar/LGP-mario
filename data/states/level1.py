@@ -1327,6 +1327,8 @@ class Level1(tools._State):
 
 
     def play_death_song(self):
+        self.set_game_info_values()
+        self.done = True
         if self.death_timer == 0:
             self.death_timer = self.current_time
         elif (self.current_time - self.death_timer) > 3000:
