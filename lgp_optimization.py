@@ -1,5 +1,7 @@
 from random import randint, random, uniform
 import numpy as np
+import os.path
+import csv
 
 MIN_INSTRUCTIONS = 10
 MAX_INSTRUCTIONS = 30
@@ -7,7 +9,7 @@ MIN_TIME = 1
 MAX_TIME = 1000
 N_COMMANDS = 8
 
-N_GENERATIONS = 1000
+N_GENERATIONS = 100
 POPULATION_SIZE = 10
 TOURNAMENT_SIZE = 5
 ELITISM_SIZE = 1
@@ -16,6 +18,8 @@ P_CROSSOVER = 0.5
 P_MUTATE = 0.01
 
 MAX_DISTANCE = 100
+SAVE_FREQUENCY = 100
+POPULATION_FOLDER = 'populations'
 
 
 def initialize_population():
@@ -101,13 +105,28 @@ def perform_elitism(population, best_chromosome):
 
 
 def main():
-    population = initialize_population()
+    distance = 0
+    time = 0
+    print('- Enter a name of the population \n- If the name already exists the population will be loaded '
+          '\n- Otherwise a new population will be created with the selected name')
+    population_name = raw_input()
+    file_path = os.path.join(POPULATION_FOLDER, '{}.txt'.format(population_name))
+
+    if os.path.isfile(file_path):
+        population = []
+        with open(file_path, 'rb') as csv_file:
+            reader = csv.reader(csv_file, delimiter=';')
+            for row in reader:
+                population.append(row)
+    else:
+        population = initialize_population()
 
     for generation in range(N_GENERATIONS):
         best_fitness = 0
         best_chromosome = []
         fitness_list = []
         for chromosome in population:
+            #TODO remove comment and (maybe) adjust fitness function after running game works
             #distance, time = run_game(chromosome)
             fitness = get_fitness(distance, time)
             fitness_list.append(fitness)
@@ -133,7 +152,17 @@ def main():
             new_chromosome = mutate(chromosome)
             tmp_population[i] = new_chromosome
 
-        population = perform_elitism(tmp_population, best_chromosome)
+        #TODO remove comment when running game works
+        #population = perform_elitism(tmp_population, best_chromosome)
+        population = tmp_population
+
+        if generation % SAVE_FREQUENCY == 0:
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+            with open(file_path, 'wb') as csv_file:
+                writer = csv.writer(csv_file, delimiter=';')
+                for row in population:
+                    writer.writerow(row)
 
 
 if __name__ == "__main__":
