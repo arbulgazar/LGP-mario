@@ -4,6 +4,7 @@ import pygame as pg
 from .. import setup, tools
 from .. import constants as c
 from . import powerups
+from time import time
 
 
 class Mario(pg.sprite.Sprite):
@@ -18,6 +19,7 @@ class Mario(pg.sprite.Sprite):
         self.load_images_from_sheet()
 
         self.state = c.WALK
+        self.jump_time = 0
         self.image = self.right_frames[self.frame_index]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
@@ -463,7 +465,8 @@ class Mario(pg.sprite.Sprite):
                 else:
                     setup.SFX['small_jump'].play()
                 self.state = c.JUMP
-                self.y_vel = c.JUMP_VEL
+                self.jump_time = time()
+                self.y_vel = -c.MARIO_Y_VELOCITY
         else:
             self.state = c.STAND
 
@@ -559,6 +562,7 @@ class Mario(pg.sprite.Sprite):
 
         if keys[tools.keybinding['jump']]:
             if self.allow_jump:
+                self.jump_time = time()
                 if self.big:
                     setup.SFX['big_jump'].play()
                 else:
@@ -637,14 +641,21 @@ class Mario(pg.sprite.Sprite):
     def jumping(self, keys, fire_group):
         """Called when Mario is in a JUMP state."""
         self.allow_jump = False
-        self.frame_index = 4
-        self.gravity = c.JUMP_GRAVITY
-        self.y_vel += self.gravity
-        self.check_to_allow_fireball(keys)
 
-        if self.y_vel >= 0 and self.y_vel < self.max_y_vel:
-            self.gravity = c.GRAVITY
+        self.frame_index = 4
+        # self.gravity = c.JUMP_GRAVITY
+        self.y_vel = -c.MARIO_Y_VELOCITY
+
+        self.check_to_allow_fireball(keys)
+        if time() - self.jump_time >= c.JUMP_TIME:
+            delta = time() - self.jump_time
+            str(delta)
+            self.y_vel = c.MARIO_Y_VELOCITY
             self.state = c.FALL
+
+        # if self.y_vel >= 0 and self.y_vel < self.max_y_vel:
+        #     self.gravity = c.GRAVITY
+        #     self.state = c.FALL
 
         if keys[tools.keybinding['left']]:
             self.x_vel = -c.MARIO_X_VELOCITY
@@ -656,9 +667,9 @@ class Mario(pg.sprite.Sprite):
             # if self.x_vel < self.max_x_vel:
             #     self.x_vel += self.x_accel
 
-        if not keys[tools.keybinding['jump']]:
-            self.gravity = c.GRAVITY
-            self.state = c.FALL
+        # if not keys[tools.keybinding['jump']]:
+        #     self.gravity = c.GRAVITY
+        #     self.state = c.FALL
 
         if keys[tools.keybinding['action']]:
             if self.fire and self.allow_fireball:
@@ -667,9 +678,11 @@ class Mario(pg.sprite.Sprite):
 
     def falling(self, keys, fire_group):
         """Called when Mario is in a FALL state"""
+
+        self.y_vel = c.MARIO_Y_VELOCITY
         self.check_to_allow_fireball(keys)
-        if self.y_vel < c.MAX_Y_VEL:
-            self.y_vel += self.gravity
+        # if self.y_vel < c.MAX_Y_VEL:
+        #     self.y_vel += self.gravity
 
         if keys[tools.keybinding['left']]:
             if self.x_vel > (self.max_x_vel * - 1):
