@@ -154,6 +154,8 @@ def main():
 
         #TODO remove comment when running game works
         #population = perform_elitism(tmp_population, best_chromosome)
+
+        #TODO remove line when elitism is used
         population = tmp_population
 
         if generation % SAVE_FREQUENCY == 0:
