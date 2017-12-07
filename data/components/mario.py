@@ -436,7 +436,6 @@ class Mario(pg.sprite.Sprite):
 
     def standing(self, keys, fire_group):
         """This function is called if Mario is standing still"""
-        print "Standing still", keys
         self.check_to_allow_jump(keys)
         self.check_to_allow_fireball(keys)
         
@@ -444,40 +443,32 @@ class Mario(pg.sprite.Sprite):
         self.x_vel = 0
         self.y_vel = 0
 
-        if keys[0] == tools.keybinding['jump']:
+        if keys == tools.keybinding['action']:
+            if self.fire and self.allow_fireball:
+                self.shoot_fireball(fire_group)
+
+        if keys == tools.keybinding['down']:
+            self.crouching = True
+
+        if keys == tools.keybinding['jump']:
             self.state = c.JUMP
             self.jump_time = time()
             self.y_vel = -c.MARIO_Y_VELOCITY
 
-        if keys[0] == tools.keybinding['action']:
-            if self.fire and self.allow_fireball:
-                self.shoot_fireball(fire_group)
-
-        if keys[0] == tools.keybinding['down']:
-            self.crouching = True
-
-        if keys[0] == tools.keybinding['left']:
+        elif keys == tools.keybinding['left']:
             self.facing_right = False
             self.get_out_of_crouch()
             self.state = c.WALK
-            print "things"
-        elif keys[0] == tools.keybinding['right']:
+
+        elif keys == tools.keybinding['right']:
             self.facing_right = True
             self.get_out_of_crouch()
             self.state = c.WALK
-        elif keys[0] == tools.keybinding['jump']:
-            if self.allow_jump:
-                if self.big:
-                    setup.SFX['big_jump'].play()
-                else:
-                    setup.SFX['small_jump'].play()
-                self.state = c.JUMP
-                self.jump_time = time()
-                self.y_vel = -c.MARIO_Y_VELOCITY
+
         else:
             self.state = c.STAND
 
-        if not keys[0] == tools.keybinding['down']:
+        if not keys == tools.keybinding['down']:
             self.get_out_of_crouch()
 
 
@@ -497,13 +488,13 @@ class Mario(pg.sprite.Sprite):
 
     def check_to_allow_jump(self, keys):
         """Check to allow Mario to jump"""
-        if not keys[0] == tools.keybinding['jump']:
+        if not keys == tools.keybinding['jump']:
             self.allow_jump = True
 
 
     def check_to_allow_fireball(self, keys):
         """Check to allow the shooting of a fireball"""
-        if not keys[0] == tools.keybinding['action']:
+        if not keys == tools.keybinding['action']:
             self.allow_fireball = True
 
 
@@ -558,7 +549,7 @@ class Mario(pg.sprite.Sprite):
 
                 self.walking_timer = self.current_time
 
-        if keys[0] == tools.keybinding['action']:
+        if keys == tools.keybinding['action']:
             self.max_x_vel = c.MAX_RUN_SPEED
             self.x_accel = c.RUN_ACCEL
             if self.fire and self.allow_fireball:
@@ -567,7 +558,7 @@ class Mario(pg.sprite.Sprite):
             self.max_x_vel = c.MAX_WALK_SPEED
             self.x_accel = c.WALK_ACCEL
 
-        if keys[0] == tools.keybinding['jump']:
+        if keys == tools.keybinding['jump']:
             if self.allow_jump:
                 self.jump_time = time()
                 if self.big:
@@ -580,8 +571,7 @@ class Mario(pg.sprite.Sprite):
                 else:
                     self.y_vel = c.JUMP_VEL
 
-
-        if keys[0] == tools.keybinding['left']:
+        if keys == tools.keybinding['left']:
             self.get_out_of_crouch()
             self.facing_right = False
             self.x_vel = -c.MARIO_X_VELOCITY
@@ -598,7 +588,7 @@ class Mario(pg.sprite.Sprite):
             # elif self.x_vel < (self.max_x_vel * -1):
             #     self.x_vel += self.x_accel
 
-        elif keys[0] == tools.keybinding['right']:
+        elif keys == tools.keybinding['right']:
             self.get_out_of_crouch()
             self.facing_right = True
             self.x_vel = c.MARIO_X_VELOCITY
@@ -617,7 +607,7 @@ class Mario(pg.sprite.Sprite):
 
         else:
             self.x_vel = 0
-            self.state = c.STAND
+            # self.state = c.STAND
             # if self.facing_right:
             #     if self.x_vel > 0:
             #         self.x_vel -= self.x_accel
@@ -664,12 +654,12 @@ class Mario(pg.sprite.Sprite):
         #     self.gravity = c.GRAVITY
         #     self.state = c.FALL
 
-        if keys[0] == tools.keybinding['left']:
+        if keys == tools.keybinding['left']:
             self.x_vel = -c.MARIO_X_VELOCITY
             # if self.x_vel > (self.max_x_vel * - 1):
             #     self.x_vel -= self.x_accel
 
-        elif keys[0] == tools.keybinding['right']:
+        elif keys == tools.keybinding['right']:
             self.x_vel = c.MARIO_X_VELOCITY
             # if self.x_vel < self.max_x_vel:
             #     self.x_vel += self.x_accel
@@ -678,7 +668,7 @@ class Mario(pg.sprite.Sprite):
         #     self.gravity = c.GRAVITY
         #     self.state = c.FALL
 
-        if keys[0] == tools.keybinding['action']:
+        if keys == tools.keybinding['action']:
             if self.fire and self.allow_fireball:
                 self.shoot_fireball(fire_group)
 
@@ -691,15 +681,15 @@ class Mario(pg.sprite.Sprite):
         # if self.y_vel < c.MAX_Y_VEL:
         #     self.y_vel += self.gravity
 
-        if keys[0] == tools.keybinding['left']:
+        if keys == tools.keybinding['left']:
             if self.x_vel > (self.max_x_vel * - 1):
                 self.x_vel -= self.x_accel
 
-        elif keys[0] == tools.keybinding['right']:
+        elif keys == tools.keybinding['right']:
             if self.x_vel < self.max_x_vel:
                 self.x_vel += self.x_accel
 
-        if keys[0] == tools.keybinding['action']:
+        if keys == tools.keybinding['action']:
             if self.fire and self.allow_fireball:
                 self.shoot_fireball(fire_group)
 

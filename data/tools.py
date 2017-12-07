@@ -24,8 +24,9 @@ class Control(object):
         self.fps = 60
         self.show_fps = False
         self.current_time = 0.0
-        # self.keys = pg.key.get_pressed()
-        self.keys = [None] * 20
+        self.action_start_time = 0.0
+        self.current_action_idx = 0
+        self.keys = keybinding['still']
         self.state_dict = {}
         self.state_name = None
         self.state = None
@@ -52,7 +53,20 @@ class Control(object):
 
 
     def event_loop(self, chromosome):
-        self.keys = chromosome
+
+        if self.action_start_time == 0.0:
+            self.action_start_time = self.current_time
+            self.keys = chromosome[self.current_action_idx]
+        elif self.current_time - self.action_start_time > chromosome[self.current_action_idx+1]:
+            self.current_action_idx += 2
+            if self.current_action_idx <= len(chromosome)-1:
+                self.action_start_time = self.current_time
+                print "Action idx", self.current_action_idx
+                self.keys = chromosome[self.current_action_idx]
+            else:
+                self.done = True
+
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
