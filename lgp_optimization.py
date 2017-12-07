@@ -2,6 +2,10 @@ from random import randint, random, uniform
 import numpy as np
 import os.path
 import csv
+import sys
+import pygame as pg
+import cProfile
+from data import marioMain
 
 MIN_INSTRUCTIONS = 10
 MAX_INSTRUCTIONS = 30
@@ -103,6 +107,12 @@ def perform_elitism(population, best_chromosome):
         population[i] = best_chromosome
     return population
 
+# Run game in this function
+def decode_chromosome(chromosome):
+    chromosome = [1]
+    marioMain.mainMario(chromosome)
+    pg.quit()
+    sys.exit()
 
 def main():
     distance = 0
@@ -128,6 +138,7 @@ def main():
         for chromosome in population:
             #TODO remove comment and (maybe) adjust fitness function after running game works
             #distance, time = run_game(chromosome)
+            decode_chromosome(chromosome)
             fitness = get_fitness(distance, time)
             fitness_list.append(fitness)
             if fitness > best_fitness:

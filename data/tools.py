@@ -4,11 +4,11 @@ import os
 import pygame as pg
 
 keybinding = {
-    'action':pg.K_s,
-    'jump':pg.K_a,
-    'left':pg.K_LEFT,
-    'right':pg.K_RIGHT,
-    'down':pg.K_DOWN
+    'action':1,
+    'jump':2,
+    'left':3,
+    'right':4,
+    'down':5
 }
 
 class Control(object):
@@ -23,7 +23,8 @@ class Control(object):
         self.fps = 60
         self.show_fps = False
         self.current_time = 0.0
-        self.keys = pg.key.get_pressed()
+        # self.keys = pg.key.get_pressed()
+        self.keys = [None] * 20
         self.state_dict = {}
         self.state_name = None
         self.state = None
@@ -49,7 +50,9 @@ class Control(object):
         self.state.previous = previous
 
 
-    def event_loop(self):
+    def event_loop(self, chromosome):
+        if chromosome[0] == 1:
+            self.keys[0] = 1
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
@@ -68,10 +71,10 @@ class Control(object):
                 pg.display.set_caption(self.caption)
 
 
-    def main(self):
+    def main(self, chromosome):
         """Main loop for entire program"""
         while not self.done:
-            self.event_loop()
+            self.event_loop(chromosome)
             self.update()
             pg.display.update()
             self.clock.tick(self.fps)
