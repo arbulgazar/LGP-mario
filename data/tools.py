@@ -51,13 +51,12 @@ class Control(object):
 
 
     def event_loop(self, chromosome):
-        if chromosome[0] == 1:
-            self.keys[0] = 1
+        self.keys = chromosome
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
             elif event.type == pg.KEYDOWN:
-                self.keys = pg.key.get_pressed()
+                # self.keys = pg.key.get_pressed()
                 self.toggle_show_fps(event.key)
             elif event.type == pg.KEYUP:
                 self.keys = pg.key.get_pressed()
