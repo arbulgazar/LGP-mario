@@ -102,19 +102,18 @@ class Menu(tools._State):
         surface.blit(self.cursor.image, self.cursor.rect)
         self.overhead_info.draw(surface)
 
-
     def update_cursor(self, keys):
         """Update the position of the cursor"""
         input_list = [pg.K_RETURN, pg.K_a, pg.K_s]
 
         if self.cursor.state == c.PLAYER1:
             self.cursor.rect.y = 358
-            if keys[pg.K_DOWN]:
-                self.cursor.state = c.PLAYER2
-            for input in input_list:
-                if keys[input]:
-                    self.reset_game_info()
-                    self.done = True
+            # if keys[pg.K_DOWN]:
+            #    self.cursor.state = c.PLAYER2
+            # for input in input_list:
+            #    if keys[input]:
+            self.reset_game_info()
+            self.done = True
         elif self.cursor.state == c.PLAYER2:
             self.cursor.rect.y = 403
             if keys[pg.K_UP]:
