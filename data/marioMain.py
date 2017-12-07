@@ -15,7 +15,7 @@ def mainMario(chromosome):
                   c.LEVEL1: level1.Level1()}
 
     run_it.setup_states(state_dict, c.MAIN_MENU)
-    run_it.main(chromosome)
+    distance, time = run_it.main(chromosome)
 
 
 

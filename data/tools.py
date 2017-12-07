@@ -37,7 +37,7 @@ class Control(object):
 
     def update(self):
         self.current_time = pg.time.get_ticks()
-        if self.state.quit:
+        if self.state.quit or self.state.game_info['mario dead']:
             self.done = True
         elif self.state.done:
             self.flip_state()
@@ -82,7 +82,7 @@ class Control(object):
                 fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
                 pg.display.set_caption(with_fps)
-
+        return self.state.viewport.x, self.current_time
 
 class _State(object):
     def __init__(self):
