@@ -16,6 +16,4 @@ def mainMario(chromosome):
 
     run_it.setup_states(state_dict, c.MAIN_MENU)
     distance, time = run_it.main(chromosome)
-
-
-
+    return distance, time

@@ -110,7 +110,7 @@ def perform_elitism(population, best_chromosome):
 # Run game in this function
 def decode_chromosome(chromosome):
     chromosome = [3]
-    marioMain.mainMario(chromosome)
+    distance, time = marioMain.mainMario(chromosome)
     pg.quit()
     sys.exit()
 
