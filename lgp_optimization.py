@@ -113,6 +113,7 @@ def decode_chromosome(chromosome):
     distance, time = marioMain.mainMario(chromosome)
     pg.quit()
     sys.exit()
+    return distance, time
 
 def main():
     distance = 0
@@ -138,7 +139,7 @@ def main():
         for chromosome in population:
             #TODO remove comment and (maybe) adjust fitness function after running game works
             #distance, time = run_game(chromosome)
-            decode_chromosome(chromosome)
+            distance, time = decode_chromosome(chromosome)
             fitness = get_fitness(distance, time)
             fitness_list.append(fitness)
             if fitness > best_fitness:
