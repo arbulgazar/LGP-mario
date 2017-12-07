@@ -664,12 +664,12 @@ class Mario(pg.sprite.Sprite):
         #     self.gravity = c.GRAVITY
         #     self.state = c.FALL
 
-        if keys[tools.keybinding['left']]:
+        if keys[0] == tools.keybinding['left']:
             self.x_vel = -c.MARIO_X_VELOCITY
             # if self.x_vel > (self.max_x_vel * - 1):
             #     self.x_vel -= self.x_accel
 
-        elif keys[tools.keybinding['right']]:
+        elif keys[0] == tools.keybinding['right']:
             self.x_vel = c.MARIO_X_VELOCITY
             # if self.x_vel < self.max_x_vel:
             #     self.x_vel += self.x_accel
@@ -678,7 +678,7 @@ class Mario(pg.sprite.Sprite):
         #     self.gravity = c.GRAVITY
         #     self.state = c.FALL
 
-        if keys[tools.keybinding['action']]:
+        if keys[0] == tools.keybinding['action']:
             if self.fire and self.allow_fireball:
                 self.shoot_fireball(fire_group)
 

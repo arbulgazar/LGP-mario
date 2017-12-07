@@ -8,7 +8,8 @@ keybinding = {
     'jump':2,
     'left':3,
     'right':4,
-    'down':5
+    'down':5,
+    'still':6
 }
 
 class Control(object):
