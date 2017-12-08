@@ -15,9 +15,9 @@ MIN_TIME = 100
 MAX_TIME = 1000
 N_COMMANDS = 6
 
-N_GENERATIONS = 10
+N_GENERATIONS = 10000
 POPULATION_SIZE = 10
-TOURNAMENT_SIZE = 5
+TOURNAMENT_SIZE = 2
 ELITISM_SIZE = 1
 P_TOUR = 0.7
 P_CROSSOVER = 0.5
@@ -84,14 +84,13 @@ def crossover(chromosome_1, chromosome_2):
     c_1_part_3 = chromosome_1[split_2:length_c_1]
     c_2_part_1 = chromosome_2[0:split_3]
     c_2_part_2 = chromosome_2[split_3:split_4]
-    c_2_part_3 = chromosome_2[split_4:length_c_2/2]
+    c_2_part_3 = chromosome_2[split_4:length_c_2]
 
     new_c_1 = [c_1_part_1, c_2_part_2, c_1_part_3]
     new_c_2 = [c_2_part_1, c_1_part_2, c_2_part_3]
 
     new_c_1 = [value for part in new_c_1 for value in part]
     new_c_2 = [value for part in new_c_2 for value in part]
-
     return new_c_1, new_c_2
 
 
@@ -129,15 +128,17 @@ def main():
         with open(file_path, 'rb') as csv_file:
             reader = csv.reader(csv_file, delimiter=';')
             for row in reader:
-                population.append(row)
+                population.append(map(int, row))
     else:
         population = initialize_population()
 
+    best_fitness = 0
+    best_chromosome = []
+
     for generation in range(N_GENERATIONS):
-        best_fitness = 0
-        best_chromosome = []
         fitness_list = []
-        for chromosome in population:
+        for i, chromosome in enumerate(population):
+            print('Generation: {}, Individual: {}'.format(generation, i))
             distance, time = decode_chromosome(chromosome)
             fitness = get_fitness(distance, time)
             fitness_list.append(fitness)

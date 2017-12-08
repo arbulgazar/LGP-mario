@@ -49,7 +49,7 @@ class Control(object):
         previous, self.state_name = self.state_name, self.state.next
         persist = self.state.cleanup()
         self.state = self.state_dict[self.state_name]
-        self.state.startup(self.current_time, persist)
+        self.state.startup(self.current_time, persist, self.redraw)
         self.state.previous = previous
 
 
@@ -62,7 +62,7 @@ class Control(object):
             self.current_action_idx += 2
             if self.current_action_idx <= len(chromosome)-1:
                 self.action_start_time = self.current_time
-                print "Action idx", self.current_action_idx
+                #print "Action idx", self.current_action_idx
                 self.keys = chromosome[self.current_action_idx]
             else:
                 self.done = True

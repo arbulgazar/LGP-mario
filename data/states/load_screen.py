@@ -10,7 +10,7 @@ class LoadScreen(tools._State):
     def __init__(self):
         tools._State.__init__(self)
 
-    def startup(self, current_time, persist):
+    def startup(self, current_time, persist, redraw):
         self.start_time = current_time
         self.persist = persist
         self.game_info = self.persist
@@ -19,7 +19,8 @@ class LoadScreen(tools._State):
         info_state = self.set_overhead_info_state()
 
         self.overhead_info = info.OverheadInfo(self.game_info, info_state)
-        self.sound_manager = game_sound.Sound(self.overhead_info)
+        if redraw:
+            self.sound_manager = game_sound.Sound(self.overhead_info)
 
 
     def set_next_state(self):
