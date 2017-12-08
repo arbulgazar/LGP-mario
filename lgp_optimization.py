@@ -1,6 +1,8 @@
 from random import randint, random, uniform
 import numpy as np
 import os.path
+import os
+import errno
 import csv
 import sys
 import pygame as pg
@@ -11,9 +13,9 @@ MIN_INSTRUCTIONS = 10
 MAX_INSTRUCTIONS = 30
 MIN_TIME = 1
 MAX_TIME = 1000
-N_COMMANDS = 8
+N_COMMANDS = 6
 
-N_GENERATIONS = 100
+N_GENERATIONS = 10
 POPULATION_SIZE = 10
 TOURNAMENT_SIZE = 5
 ELITISM_SIZE = 1
@@ -109,10 +111,7 @@ def perform_elitism(population, best_chromosome):
 
 # Run game in this function
 def decode_chromosome(chromosome):
-    chromosome = [4, 800, 2, 500, 4, 500, 3, 500, 2, 500, 3, 500, 2, 500, 3, 500, 4, 500, 3, 500, 4, 500, 3, 500]
     distance, time = marioMain.mainMario(chromosome)
-    pg.quit()
-    sys.exit()
     return distance, time
 
 def main():
@@ -173,10 +172,18 @@ def main():
         if generation % SAVE_FREQUENCY == 0:
             if os.path.isfile(file_path):
                 os.remove(file_path)
+            if not os.path.exists(os.path.dirname(file_path)):
+                try:
+                    os.makedirs(os.path.dirname(file_path))
+                except OSError as exc:  # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
             with open(file_path, 'wb') as csv_file:
                 writer = csv.writer(csv_file, delimiter=';')
                 for row in population:
                     writer.writerow(row)
+    pg.quit()
+    sys.exit()
 
 
 if __name__ == "__main__":
