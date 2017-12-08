@@ -9,9 +9,9 @@ import pygame as pg
 import cProfile
 from data import marioMain
 
-MIN_INSTRUCTIONS = 10
-MAX_INSTRUCTIONS = 30
-MIN_TIME = 1
+MIN_INSTRUCTIONS = 20
+MAX_INSTRUCTIONS = 50
+MIN_TIME = 100
 MAX_TIME = 1000
 N_COMMANDS = 6
 
@@ -24,8 +24,10 @@ P_CROSSOVER = 0.5
 P_MUTATE = 0.01
 
 MAX_DISTANCE = 100
-SAVE_FREQUENCY = 100
+SAVE_FREQUENCY = 1
 POPULATION_FOLDER = 'populations'
+
+DRAW_FRAMES = True
 
 
 def initialize_population():
@@ -44,7 +46,7 @@ def initialize_population():
 
 
 def get_fitness(distance, time):
-    fitness = distance/MAX_DISTANCE*100 - time/10
+    fitness = distance
     return fitness
 
 
@@ -72,10 +74,10 @@ def tournament_select(fitness_list):
 def crossover(chromosome_1, chromosome_2):
     length_c_1 = len(chromosome_1)
     length_c_2 = len(chromosome_2)
-    split_1 = 2*randint(1, length_c_1/2)
-    split_2 = 2*randint(split_1/2, length_c_1/2)
-    split_3 = 2*randint(1, length_c_2/2)
-    split_4 = 2*randint(split_3/2, length_c_2/2)
+    split_1 = 2*randint(1, length_c_1/2-2)
+    split_2 = 2*randint(split_1/2+1, length_c_1/2-1)
+    split_3 = 2*randint(1, length_c_2/2-2)
+    split_4 = 2*randint(split_3/2+1, length_c_2/2-1)
 
     c_1_part_1 = chromosome_1[0:split_1]
     c_1_part_2 = chromosome_1[split_1:split_2]
@@ -111,8 +113,7 @@ def perform_elitism(population, best_chromosome):
 
 # Run game in this function
 def decode_chromosome(chromosome):
-    print(chromosome)
-    distance, time = marioMain.mainMario(chromosome, redraw=False)
+    distance, time = marioMain.mainMario(chromosome, redraw=DRAW_FRAMES)
     return distance, time
 
 def main():
@@ -137,8 +138,6 @@ def main():
         best_chromosome = []
         fitness_list = []
         for chromosome in population:
-            #TODO remove comment and (maybe) adjust fitness function after running game works
-            #distance, time = run_game(chromosome)
             distance, time = decode_chromosome(chromosome)
             fitness = get_fitness(distance, time)
             fitness_list.append(fitness)
