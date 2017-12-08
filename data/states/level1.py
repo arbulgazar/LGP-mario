@@ -351,13 +351,14 @@ class Level1(tools._State):
                                                      self.enemy_group)
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, redraw):
         """Updates Entire level using states.  Called by the control object"""
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.handle_states(keys)
         self.check_if_time_out()
-        self.blit_everything(surface)
-        self.sound_manager.update(self.game_info, self.mario)
+        if redraw:
+            self.blit_everything(surface)
+            self.sound_manager.update(self.game_info, self.mario)
 
 
 

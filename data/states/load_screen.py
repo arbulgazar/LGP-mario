@@ -31,7 +31,7 @@ class LoadScreen(tools._State):
         return c.LOAD_SCREEN
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_time, redraw):
         """Updates the loading screen"""
         # Learning
         self.done = True

@@ -16,7 +16,7 @@ class Control(object):
     """Control class for entire project. Contains the game loop, and contains
     the event_loop which passes events to States as needed. Logic for flipping
     states is also found here."""
-    def __init__(self, caption):
+    def __init__(self, caption, redraw):
         self.screen = pg.display.get_surface()
         self.done = False
         self.clock = pg.time.Clock()
@@ -30,6 +30,7 @@ class Control(object):
         self.state_dict = {}
         self.state_name = None
         self.state = None
+        self.redraw = redraw
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
@@ -42,7 +43,7 @@ class Control(object):
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.keys, self.current_time)
+        self.state.update(self.screen, self.keys, self.current_time, self.redraw)
 
     def flip_state(self):
         previous, self.state_name = self.state_name, self.state.next
@@ -90,7 +91,8 @@ class Control(object):
         while not self.done:
             self.event_loop(chromosome)
             self.update()
-            pg.display.update()
+            if self.redraw:
+                pg.display.update()
             self.clock.tick(self.fps)
             if self.show_fps:
                 fps = self.clock.get_fps()

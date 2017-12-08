@@ -59,7 +59,7 @@ def tournament_select(fitness_list):
     tournament_counter = 1
 
     while not_selected:
-        if random() > P_TOUR or tournament_counter == TOURNAMENT_SIZE:
+        if random() < P_TOUR or tournament_counter == TOURNAMENT_SIZE:
             index_selected = indices[0]
             not_selected = False
         else:
@@ -111,7 +111,8 @@ def perform_elitism(population, best_chromosome):
 
 # Run game in this function
 def decode_chromosome(chromosome):
-    distance, time = marioMain.mainMario(chromosome)
+    print(chromosome)
+    distance, time = marioMain.mainMario(chromosome, redraw=False)
     return distance, time
 
 def main():
@@ -163,11 +164,7 @@ def main():
             new_chromosome = mutate(chromosome)
             tmp_population[i] = new_chromosome
 
-        #TODO remove comment when running game works
-        #population = perform_elitism(tmp_population, best_chromosome)
-
-        #TODO remove line when elitism is used
-        population = tmp_population
+        population = perform_elitism(tmp_population, best_chromosome)
 
         if generation % SAVE_FREQUENCY == 0:
             if os.path.isfile(file_path):
