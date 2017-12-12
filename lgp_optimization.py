@@ -112,6 +112,7 @@ def perform_elitism(population, best_chromosome):
 
 # Run game in this function
 def decode_chromosome(chromosome):
+    chromosome = [6, 500, 4, 2000, 2, 200, 4, 1350, 2, 200, 4, 1300, 2, 200, 4, 1000]
     distance, time = marioMain.mainMario(chromosome, redraw=DRAW_FRAMES)
     return distance, time
 
