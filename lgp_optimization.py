@@ -9,10 +9,10 @@ import pygame as pg
 import cProfile
 from data import marioMain
 
-MIN_INSTRUCTIONS = 3000
-MAX_INSTRUCTIONS = 3000
+MIN_INSTRUCTIONS = 200
+MAX_INSTRUCTIONS = 2000
 MIN_TIME = 100
-MAX_TIME = 100
+MAX_TIME = 500
 N_COMMANDS = 3
 
 N_GENERATIONS = 1000
@@ -56,6 +56,17 @@ def mutate(chromosome, lastIndex):
 
 # Run game in this function
 def decode_chromosome(chromosome):
+    # chromosome = [3, 500, 1, 2000, 2, 200, 1, 1350, 2, 200, 1, 1300, 2, 200, 1, 300, 2, 200, 1, 1000, 2, 200, 1, 300,
+    #               2, 200, 1, 500, 3, 860, 2, 200, 1, 500, 2, 200, 1, 1000, 2, 200, 1, 700, 2, 200, 1, 2200,
+    #               2, 200, 1, 800, 2, 200, 1, 200, 6, 300, 2, 200,
+    #               1, 1600, 2, 200, 1, 1000, 2, 100, 1, 1500, 2, 100, 3, 400, 6, 300,
+    #               2, 100, 1, 500, 6, 300, 2, 100, 1, 1500,
+    #               2, 100, 1, 500, 2, 100, 1, 200, 2, 100, 1, 100, 2, 100, 1, 500, 2, 200, 1, 1000,
+    #               2, 100, 1, 500, 2, 100, 1, 200, 2, 100, 1, 100, 2, 100, 1, 500, 2, 200, 1, 1000,
+    #               2, 100, 1, 500, 3, 1000, 1, 800, 2, 100, 1, 900,
+    #               2, 100, 1, 500, 2, 100, 1, 200, 2, 100, 1, 100, 2, 100, 1, 500, 2, 200, 1, 1000,
+    #               2, 100, 1, 2000
+    #               ]
     distance, lastIndex = marioMain.mainMario(chromosome, redraw=DRAW_FRAMES)
     return distance, lastIndex
 
@@ -82,6 +93,7 @@ def main():
         for i, chromosome in enumerate(population):
             print('Run number: {}'.format(generation+1))
             distance, lastIndex = decode_chromosome(chromosome)
+            print "distance ", distance, "bestDist ",bestDistance, "lastIdx ", lastIndex
 
         if distance > bestDistance:
             bestChromosome = chromosome
