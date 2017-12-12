@@ -4,12 +4,12 @@ import os
 import pygame as pg
 
 keybinding = {
-    'action':1,
+    'right':1,
     'jump':2,
-    'left':3,
-    'right':4,
+    'still': 3,
+    'action': 4,
     'down':5,
-    'still':6
+    'left':6,
 }
 
 class Control(object):
@@ -98,7 +98,7 @@ class Control(object):
                 fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
                 pg.display.set_caption(with_fps)
-        return self.state.viewport.x, self.current_time
+        return self.state.viewport.x, self.current_action_idx
 
 class _State(object):
     def __init__(self):
