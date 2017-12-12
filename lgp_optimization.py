@@ -28,6 +28,8 @@ def initialize_population():
     for i in range(0, POPULATION_SIZE):
         n_instructions = randint(MIN_INSTRUCTIONS, MAX_INSTRUCTIONS)
         chromosome = []
+        chromosome.append(3)
+        chromosome.append(1000)
         for j in range(0, n_instructions):
             random_command = randint(1, N_COMMANDS)
             random_time = randint(MIN_TIME, MAX_TIME)
