@@ -2,6 +2,8 @@ __author__ = 'justinarmstrong'
 
 import os
 import pygame as pg
+import constants as c
+import time
 
 keybinding = {
     'right':1,
@@ -10,6 +12,14 @@ keybinding = {
     'action': 4,
     'down':5,
     'left':6,
+}
+keybinding_rev = {
+    1: 'right',
+    2: 'jump',
+    3: 'still',
+    4: 'action',
+    5: 'down',
+    6: 'left',
 }
 
 class Control(object):
@@ -31,6 +41,9 @@ class Control(object):
         self.state_name = None
         self.state = None
         self.redraw = redraw
+
+        self.last_movement_time = 0.0
+        self.last_position = -999
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
@@ -55,14 +68,25 @@ class Control(object):
 
     def event_loop(self, chromosome):
 
+        if self.state_name == 'level1' and self.current_action_idx > 0:
+            if self.last_position == self.state.viewport.x:
+                if time.time()*1000.0 - self.last_movement_time > c.MAXIMAL_STILL_TIME:
+                    print "Standing like an idiot for too long, terminate"
+                    self.done = True
+            else:
+                # print "New best pos", self.state.viewport.x, "time ", self.current_time
+                self.last_position = self.state.viewport.x
+                self.last_movement_time = time.time()*1000.0
+
         if self.action_start_time == 0.0:
-            self.action_start_time = self.current_time
+            self.action_start_time = time.time()*1000.0
             self.keys = chromosome[self.current_action_idx]
-        elif self.current_time - self.action_start_time > chromosome[self.current_action_idx+1]:
+        elif time.time()*1000.0 - self.action_start_time > chromosome[self.current_action_idx+1]:
             self.current_action_idx += 2
+
+            # print "Doing \"", keybinding_rev[chromosome[self.current_action_idx]], "\"\tfor time", chromosome[self.current_action_idx+1]
             if self.current_action_idx <= len(chromosome)-1:
-                self.action_start_time = self.current_time
-                #print "Action idx", self.current_action_idx
+                self.action_start_time = time.time()*1000.0
                 self.keys = chromosome[self.current_action_idx]
             else:
                 self.done = True
