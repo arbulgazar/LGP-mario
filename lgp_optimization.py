@@ -59,7 +59,19 @@ def mutate(chromosome, lastIndex):
         if i > lastIndex - MUTATE_BACK_ACTIONS*2:
             if i % 2 == 0:
                 chromosome[i] = randint(1, N_COMMANDS)
-                chromosome[i+1] = randint(MIN_TIME, MAX_TIME)
+            else:
+                chromosome[i] = randint(MIN_TIME, MAX_TIME)
+    return chromosome
+
+def fix_chromosome_length(chromosome):
+    n_instructions = randint(MIN_INSTRUCTIONS, MAX_INSTRUCTIONS)
+    if len(chromosome)*2 < n_instructions:
+        print "Fixed length of chromosome from", len(chromosome), "to", n_instructions
+        for j in range(len(chromosome), n_instructions):
+            random_command = randint(1, N_COMMANDS)
+            random_time = randint(MIN_TIME, MAX_TIME)
+            chromosome.append(random_command)
+            chromosome.append(random_time)
     return chromosome
 
 
@@ -96,6 +108,15 @@ def main():
             reader = csv.reader(csv_file, delimiter=';')
             for row in reader:
                 population.append(map(int, row))
+        bestChromosome = (population[0])[:]
+        bestLastIndex = len(bestChromosome) - 4 # to be safe
+
+        temp_index = 0
+        while (temp_index < bestLastIndex):
+            print "Finding bestDistanceb\tbestlastIdx", bestLastIndex
+            bestDistance, temp_index = decode_chromosome(bestChromosome)
+            print "Finding bestDistance\tdistance ", bestDistance, "lastIdx ", temp_index, "bestlastIdx", bestLastIndex
+
     else:
         population = initialize_population()
         print population[0:20]
@@ -104,20 +125,23 @@ def main():
     for generation in range(N_GENERATIONS):
         for i, chromosome in enumerate(population):
             print('Run number: {}'.format(generation+1))
+            chromosome = fix_chromosome_length(chromosome)
             distance, lastIndex = decode_chromosome(chromosome)
             print "distance ", distance, "bestDist ",bestDistance, "lastIdx ", lastIndex, "bestlastIdx", bestLastIndex
 
         if distance > bestDistance:
-            bestChromosome = chromosome
+            bestChromosome = chromosome[0:lastIndex+2]
             bestDistance = distance
             bestLastIndex = lastIndex
         else:
-            chromosome = bestChromosome
+            chromosome = bestChromosome[:]
             lastIndex = bestLastIndex
 
-        for i, chromosome in enumerate(population):
-            new_chromosome = mutate(chromosome, lastIndex)
-            population[i] = new_chromosome
+        new_chromosome = mutate(chromosome, lastIndex)
+        population[0] = new_chromosome
+        # for i, chromosome in enumerate(population):
+        #     new_chromosome = mutate(chromosome, lastIndex)
+        #     population[i] = new_chromosome
 
 
         if generation % SAVE_FREQUENCY == 0:
