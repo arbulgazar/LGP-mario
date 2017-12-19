@@ -112,7 +112,6 @@ def perform_elitism(population, best_chromosome):
 
 # Run game in this function
 def decode_chromosome(chromosome):
-    chromosome = [6, 500, 4, 2000, 2, 200, 4, 1350, 2, 200, 4, 1300, 2, 200, 4, 1000]
     distance, time = marioMain.mainMario(chromosome, redraw=DRAW_FRAMES)
     return distance, time
 
@@ -123,6 +122,7 @@ def main():
           '\n- Otherwise a new population will be created with the selected name')
     population_name = raw_input()
     file_path = os.path.join(POPULATION_FOLDER, '{}.txt'.format(population_name))
+    file_path_fitness = os.path.join(POPULATION_FOLDER, '{}_fitness.txt'.format(population_name))
 
     if os.path.isfile(file_path):
         population = []
@@ -173,6 +173,7 @@ def main():
             if not os.path.exists(os.path.dirname(file_path)):
                 try:
                     os.makedirs(os.path.dirname(file_path))
+                    os.makedirs(os.path.dirname(file_path_fitness))
                 except OSError as exc:  # Guard against race condition
                     if exc.errno != errno.EEXIST:
                         raise
@@ -180,6 +181,10 @@ def main():
                 writer = csv.writer(csv_file, delimiter=';')
                 for row in population:
                     writer.writerow(row)
+            with open(file_path_fitness, 'a') as csv_file_2:
+                writer_2 = csv.writer(csv_file_2, delimiter=';')
+                writer_2.writerow([best_fitness])
+
     pg.quit()
     sys.exit()
 
