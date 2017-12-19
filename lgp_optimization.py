@@ -53,7 +53,6 @@ def get_fitness(distance, lastIndex):
     return fitness
 
 
-
 def mutate(chromosome, lastIndex):
     for i, gene in enumerate(chromosome):
         if i > lastIndex - MUTATE_BACK_ACTIONS*2:
@@ -62,6 +61,7 @@ def mutate(chromosome, lastIndex):
             else:
                 chromosome[i] = randint(MIN_TIME, MAX_TIME)
     return chromosome
+
 
 def fix_chromosome_length(chromosome):
     n_instructions = randint(MIN_INSTRUCTIONS, MAX_INSTRUCTIONS)
@@ -92,6 +92,7 @@ def decode_chromosome(chromosome):
     distance, lastIndex = mainMario(chromosome, redraw=DRAW_FRAMES)
     return distance, lastIndex
 
+
 def main():
     bestDistance = 0
     bestChromosome = []
@@ -101,6 +102,7 @@ def main():
           '\n- Otherwise a new population will be created with the selected name')
     population_name = raw_input()
     file_path = os.path.join(POPULATION_FOLDER, '{}.txt'.format(population_name))
+    file_path_fitness = os.path.join(POPULATION_FOLDER, '{}_fitness.txt'.format(population_name))
 
     if os.path.isfile(file_path):
         population = []
@@ -121,13 +123,12 @@ def main():
         population = initialize_population()
         print population[0:20]
 
-
     for generation in range(N_GENERATIONS):
         for i, chromosome in enumerate(population):
             print('Run number: {}'.format(generation+1))
             chromosome = fix_chromosome_length(chromosome)
             distance, lastIndex = decode_chromosome(chromosome)
-            print "distance ", distance, "bestDist ",bestDistance, "lastIdx ", lastIndex, "bestlastIdx", bestLastIndex
+            print "distance ", distance, "bestDist ", bestDistance, "lastIdx ", lastIndex, "bestlastIdx", bestLastIndex
 
         if distance > bestDistance:
             bestChromosome = chromosome[0:lastIndex+2]
@@ -143,13 +144,13 @@ def main():
         #     new_chromosome = mutate(chromosome, lastIndex)
         #     population[i] = new_chromosome
 
-
         if generation % SAVE_FREQUENCY == 0:
             if os.path.isfile(file_path):
                 os.remove(file_path)
             if not os.path.exists(os.path.dirname(file_path)):
                 try:
                     os.makedirs(os.path.dirname(file_path))
+                    os.makedirs(os.path.dirname(file_path_fitness))
                 except OSError as exc:  # Guard against race condition
                     if exc.errno != errno.EEXIST:
                         raise
@@ -157,6 +158,10 @@ def main():
                 writer = csv.writer(csv_file, delimiter=';')
                 for row in population:
                     writer.writerow(row)
+            with open(file_path_fitness, 'a') as csv_file_2:
+                writer_2 = csv.writer(csv_file_2, delimiter=';')
+                writer_2.writerow([bestDistance])
+
     pg.quit()
     sys.exit()
 
