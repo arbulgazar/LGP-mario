@@ -2,12 +2,14 @@ __author__ = 'justinarmstrong'
 
 import os
 import pygame as pg
+import time
+import constants as c
 
 keybinding = {
-    'action':1,
+    'right':1,
     'jump':2,
     'left':3,
-    'right':4,
+    'action':4,
     'down':5,
     'still':6
 }
@@ -31,6 +33,8 @@ class Control(object):
         self.state_name = None
         self.state = None
         self.redraw = redraw
+        self.last_position = 0
+        self.last_movement_time = 0
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
@@ -54,6 +58,16 @@ class Control(object):
 
 
     def event_loop(self, chromosome):
+
+        if self.state_name == 'level1' and self.current_action_idx > 0:
+            if self.last_position == self.state.viewport.x:
+                if time.time()*1000.0 - self.last_movement_time > c.MAXIMAL_STILL_TIME:
+                    print "Standing like an idiot for too long, terminate"
+                    self.done = True
+            else:
+                # print "New best pos", self.state.viewport.x, "time ", self.current_time
+                self.last_position = self.state.viewport.x
+                self.last_movement_time = time.time()*1000.0
 
         if self.action_start_time == 0.0:
             self.action_start_time = self.current_time
